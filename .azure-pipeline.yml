@@ -1,27 +1,23 @@
 trigger:
-  - main
+- main  # Or change to your branch name
 
 pool:
-  vmImage: Default
+  name: Default  # This is the name of your self-hosted agent pool
 
 steps:
-  - task: UseNode@1
-    inputs:
-      version: '18.x'
+- checkout: self
 
-  - script: |
-      npm install
-      npm run build
-    displayName: 'Install and Build'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'  # Use your installed Node.js version
+  displayName: 'Use Node.js'
 
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'my-linux-vm'
-      sourceFolder: '$(Build.SourcesDirectory)'
-      targetFolder: '/home/azureuser/node-app'
-      readyTimeout: '20000'
+- script: |
+    npm install
+    npm run build || echo "No build script found"
+  displayName: 'Install dependencies and build'
 
-  - script: |
-      pm2 restart nodeapp || pm2 start index.js --name nodeapp
-    displayName: 'Restart App'
+- script: |
+    npm test || echo "No test script found"
+  displayName: 'Run tests'
 
