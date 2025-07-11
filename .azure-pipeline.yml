@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default  # Use self-hosted agent, not Microsoft-hosted VM
 
 steps:
 - task: UseNode@1
@@ -14,25 +14,13 @@ steps:
     npm install
   displayName: 'Install dependencies'
 
-# OPTIONAL: Run tests (remove if not needed)
-# - script: |
-#     npm test
-#   displayName: 'Run tests'
-
 - script: |
-    # Install pm2 globally if not already
     sudo npm install -g pm2
 
-    # Navigate to app folder
-    cd ~/node-app
+    cd /home/azureuser/node-app
 
-    # Stop old process if exists
     pm2 delete node-app || true
-
-    # Start new process
     pm2 start index.js --name node-app
-
-    # Save process list to auto-run on reboot
     pm2 save
   displayName: '🚀 Deploy Node app using PM2'
 
