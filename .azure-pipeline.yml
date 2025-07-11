@@ -1,12 +1,6 @@
 trigger:
   - main
 
-resources:
-  connections:
-    - connection: my-linux-vm
-      name: my-linux-vm
-      authorization: auto
-
 pool:
   vmImage: ubuntu-latest
 
