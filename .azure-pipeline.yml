@@ -2,7 +2,7 @@ trigger:
   - main
 
 pool:
-  vmImage: default
+  vmImage: Default
 
 steps:
   - task: UseNode@1
